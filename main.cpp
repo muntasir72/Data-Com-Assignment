@@ -4,7 +4,7 @@ using namespace std;
 
 bool validCheck(vector<int> stream){
     for(int i : stream){
-        if(i != 0 || i != 1) return false;
+        if(i != 0 && i != 1) return false;
     }
     return true;
 }
