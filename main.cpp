@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+#include "raylib.h"
 using namespace std;
 
 bool validCheck(vector<int> stream){
@@ -278,6 +279,90 @@ vector<int> scrambling(vector<int> stream){
     }
 }
 
+void showWaveform(const vector<int>& signal) {
+    if (signal.empty()) return;
+
+    const int W = 1000, H = 420;
+    const int left = 70, right = 30;
+    const int top = 70, bottom = 290;
+    const int axisY = 320;
+
+    InitWindow(W, H, "Digital Signal Waveform");
+    SetTargetFPS(60);
+
+    float dx = float(W - left - right) / signal.size();
+
+    // Convert voltage levels to screen coordinates.
+    auto y = [&](int v) {
+        return top + (1 - v) * (bottom - top) / 2;
+    };
+
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawText("Encoded Digital Signal", 20, 20, 25, DARKGRAY);
+
+        // Horizontal voltage reference lines.
+        for (int v : {1, 0, -1}) {
+            DrawLine(left, y(v), W - right, y(v), LIGHTGRAY);
+        }
+
+        // Voltage labels.
+        DrawText("+1", 25, y(1) - 8, 16, DARKGRAY);
+        DrawText("0",   35, y(0) - 8, 16, DARKGRAY);
+        DrawText("-1", 25, y(-1) - 8, 16, DARKGRAY);
+
+        // Draw the waveform.
+        for (int i = 0; i < (int)signal.size(); i++) {
+            int x1 = left + int(i * dx);
+            int x2 = left + int((i + 1) * dx);
+
+            // Horizontal segment.
+            DrawLine(x1, y(signal[i]), x2, y(signal[i]), BLUE);
+
+            // Vertical transition.
+            if (i + 1 < (int)signal.size()) {
+                DrawLine(
+                    x2, y(signal[i]),
+                    x2, y(signal[i + 1]),
+                    BLUE
+                );
+            }
+        }
+
+        // Draw the time axis.
+        DrawLine(left, axisY, W - right, axisY, BLACK);
+
+        // Tick marks and time labels.
+        for (int i = 0; i <= (int)signal.size(); i++) {
+            int x = left + int(i * dx);
+
+            // Tick mark.
+            DrawLine(x, axisY - 5, x, axisY + 5, BLACK);
+
+            // Time label.
+            string label;
+
+            if (i == 0)
+                label = "0";
+            else if (i == 1)
+                label = "T";
+            else
+                label = to_string(i) + "T";
+
+            DrawText(label.c_str(), x - 8, axisY + 10, 14, BLACK);
+        }
+
+        // X-axis title.
+        DrawText("Time (T)", W / 2 - 40, 375, 18, DARKGRAY);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+}
+
 void lineEncodingSchemes(vector<int> &stream){
     cout << "1. NRZ-L" << endl << 
             "2. NRZ-I" << endl <<
@@ -315,6 +400,7 @@ void lineEncodingSchemes(vector<int> &stream){
     for(int i : encoded_stream){
         cout << i << " ";
     };
+    showWaveform(encoded_stream);
 }
 
 void digital_input(){
