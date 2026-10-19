@@ -95,6 +95,78 @@ vector<int> longestPalindrome(const vector<int>& stream) {
     );
 }
 
+vector<int> NRZ_L(vector<int> stream){
+    vector<int> encoded_stream;
+    for(int i : stream){
+        if(i == 0) encoded_stream.push_back(1);
+        else encoded_stream.push_back(-1);
+    }
+    return encoded_stream;
+}
+
+vector<int> NRZ_I(vector<int> stream){
+    int level = 1;
+    vector<int> encoded_stream;
+    for(int i : stream){
+        if(i == 1) level = (level+1)%2;
+        else level = level;
+        encoded_stream.push_back(level);
+    }
+    return NRZ_L(encoded_stream);
+}
+
+vector<int> Manchester(vector<int> stream){
+    vector<int> zero = {1,-1};
+    vector<int> one = {-1,1};
+
+    vector<int> encoded_stream;
+
+    for(int i = 0; i < stream.size(); i++){
+        if(stream[i] == 0) encoded_stream.insert(encoded_stream.begin() + 2*i, zero.begin(), zero.end());
+        else encoded_stream.insert(encoded_stream.begin() + 2*i, one.begin(), one.end());
+    }
+
+    return encoded_stream;
+}
+
+void lineEncodingSchemes(vector<int> &stream){
+    cout << "1. NRZ-L" << endl << 
+            "2. NRZ-I" << endl <<
+            "3. Manchester" << endl <<
+            "4. Differential Manchester" << endl << 
+            "5. AMI" << endl << endl;
+
+    int option;
+    vector<int> encoded_stream;
+
+    select_scheme:
+
+    cin >> option;
+    cout << endl << endl;
+
+    switch(option){
+        case(1):encoded_stream = NRZ_L(stream);
+        break;
+        case(2):encoded_stream = NRZ_I(stream);
+        break;
+        case(3):encoded_stream = Manchester(stream);
+        break;
+        case(4):;
+        break;
+        case(5):;
+        break;
+        default:
+        cout << "Please enter a valid encoding scheme";
+        goto select_scheme;
+    }
+    
+    cout << "Encoded Stream is: ";
+
+    for(int i : encoded_stream){
+        cout << i << " ";
+    }
+}
+
 void digital_input(){
     cout << "1. Generate completely random data" << endl << 
             "2. Generate data with fixed zero sequences" << endl << 
@@ -103,6 +175,8 @@ void digital_input(){
     int option;
     vector<int> stream;
     int size;
+
+    select_dinput:
 
     cin >> option;
     cout << endl << "size of the stream: ";
@@ -116,7 +190,9 @@ void digital_input(){
         break;
         case(3): insertBits(stream, size);
         break;
-        default: ;
+        default:
+        cout << "Please enter a valid input";
+        goto select_dinput;
     }
 
     vector<int> palindrome = longestPalindrome(stream);
@@ -124,14 +200,17 @@ void digital_input(){
     cout << "The stream is: ";
 
     for(int i : stream){
-        cout << i;
+        cout << i << " ";
     }
 
     cout << endl << "Longest palindrome is: ";
 
     for(int i : palindrome){
-        cout << i;
+        cout << i << " ";
     }
+
+    cout << endl << endl;
+    lineEncodingSchemes(stream);
 }
 
 int main(){
@@ -145,6 +224,8 @@ int main(){
             "2. Analog Input" << endl <<
             "3. Exit" << endl << endl;
 
+    select_input:
+
     cin >> option;
     cout << endl;
     srand(time(0));
@@ -157,6 +238,7 @@ int main(){
         case(3): cout << "3";
         break;
         default: cout << "Enter a valid option";
+        goto select_input;
     }
     
     return 0;
