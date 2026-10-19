@@ -2,6 +2,13 @@
 #include<fstream>
 using namespace std;
 
+bool validCheck(vector<int> stream){
+    for(int i : stream){
+        if(i != 0 || i != 1) return false;
+    }
+    return true;
+}
+
 void generateRandomBits(vector<int> &stream, int size){
     for(int i = 0; i < size; i++){
         int num = rand()%2;
@@ -19,11 +26,19 @@ void generateBitsWithZeroRuns(vector<int> &stream, int size){
 }
 
 void insertBits(vector<int> &stream, int size){
+    insert_bits:
+    
     cout << "Enter the stream: ";
+
     for(int i = 0; i < size; i++){
         int num;
         cin >> num;
         stream.push_back(num);
+    }
+    if(!validCheck(stream)){
+        stream.clear();
+        cout << "Please enter a valid stream";
+        goto insert_bits;
     }
 }
 
