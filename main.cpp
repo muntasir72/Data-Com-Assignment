@@ -160,8 +160,54 @@ vector<int> AMI(vector<int> stream){
     return encoded_stream;
 }
 
-void scrambling(vector<int> &stream){
+vector<int> B8ZS(vector<int> stream){
+
+}
+
+vector<int> HDB3(vector<int> stream){
+
+}
+
+vector<int> scrambling_schemes(vector<int> stream){
+    int option;
+
+    cout << "Which Scrambling Technique do you want?" << endl <<
+            "1. B8ZS" << endl <<
+            "2. HDB3" << endl;
     
+    select_scrambling_scheme:
+
+    cin >> option;
+
+    switch(option){
+        case(1): return B8ZS(stream);
+        break;
+        case(2): return HDB3(stream);
+        break;
+        default: cout << "Please select a valid option";
+        goto select_scrambling_scheme;
+    }
+    
+}
+
+vector<int> scrambling(vector<int> stream){
+    cout << "Do you want to implement scrambling?" << endl <<
+            "1. Yes" << endl <<
+            "2. No" << endl;
+    int option;
+
+    select_scrambling:
+
+    cin >> option;
+
+    switch(option){
+        case(1): return scrambling_schemes(stream);
+        break;
+        case(2): return stream;
+        break;
+        default: cout << "Please select a valid option." << endl;
+        goto select_scrambling;
+    }
 }
 
 void lineEncodingSchemes(vector<int> &stream){
@@ -177,7 +223,7 @@ void lineEncodingSchemes(vector<int> &stream){
     select_scheme:
 
     cin >> option;
-    cout << endl << endl;
+    cout << endl;
 
     switch(option){
         case(1):encoded_stream = NRZ_L(stream);
@@ -188,8 +234,8 @@ void lineEncodingSchemes(vector<int> &stream){
         break;
         case(4):encoded_stream = Differential_Manchester(stream);
         break;
-        case(5):encoded_stream = AMI(stream);
-        scrambling(encoded_stream);
+        case(5):encoded_stream = scrambling(stream);
+        encoded_stream = AMI(encoded_stream);
         break;
         default:
         cout << "Please enter a valid encoding scheme";
