@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+#include<fstream>
 using namespace std;
 
 void generateRandomBits(vector<int> &stream, int size){
@@ -185,7 +186,6 @@ vector<int> B8ZS(vector<int> stream){
     return encoded_stream;
 }
 
-
 vector<int> HDB3(vector<int> stream){
     vector<int> encoded_stream;
     int level = -1;
@@ -196,7 +196,7 @@ vector<int> HDB3(vector<int> stream){
         if(i + 3 < stream.size() &&
            vector<int>(stream.begin() + i, stream.begin() + i + 4) == vector<int>(4, 0)){
 
-            if(pulse_count % 2 == 0){
+            if(pulse_count % 2 == 1){
                 encoded_stream.insert(encoded_stream.end(),
                     {0,0,0,level});
             }
