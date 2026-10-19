@@ -26,8 +26,73 @@ void insertBits(vector<int> &stream, int size){
     }
 }
 
-vector<int> longestPalindrome(vector<int> stream){
-    
+vector<int> longestPalindrome(const vector<int>& stream) {
+    int n = stream.size();
+    vector<int> radius(2 * n);
+    int left = 0, right = -1;
+
+    // Odd-length palindromes
+    for (int center = 0; center < n; center++) {
+        int r = center > right ? 1
+            : min(radius[left + right - center], right - center + 1);
+
+        while (center - r >= 0 && center + r < n &&
+               stream[center - r] == stream[center + r])
+            r++;
+
+        radius[center] = r;
+
+        if (center + r - 1 > right) {
+            left = center - r + 1;
+            right = center + r - 1;
+        }
+    }
+
+    // Even-length palindromes
+    left = 0;
+    right = -1;
+
+    for (int center = 0; center < n; center++) {
+        int r = center > right ? 0
+            : min(radius[n + left + right - center + 1],
+                  right - center + 1);
+
+        while (center - r - 1 >= 0 && center + r < n &&
+               stream[center - r - 1] == stream[center + r])
+            r++;
+
+        radius[n + center] = r;
+
+        if (center + r - 1 > right) {
+            left = center - r;
+            right = center + r - 1;
+        }
+    }
+
+    // Find the longest palindrome
+    int bestStart = 0, bestLength = 0;
+
+    for (int center = 0; center < n; center++) {
+        // Odd-length palindrome
+        int length = 2 * radius[center] - 1;
+        if (length > bestLength) {
+            bestLength = length;
+            bestStart = center - radius[center] + 1;
+        }
+
+        // Even-length palindrome
+        int evenRadius = radius[n + center];
+        length = 2 * evenRadius;
+        if (length > bestLength) {
+            bestLength = length;
+            bestStart = center - evenRadius;
+        }
+    }
+
+    return vector<int>(
+        stream.begin() + bestStart,
+        stream.begin() + bestStart + bestLength
+    );
 }
 
 void digital_input(){
@@ -54,9 +119,17 @@ void digital_input(){
         default: ;
     }
 
-    cout << "the stream is: ";
+    vector<int> palindrome = longestPalindrome(stream);
+
+    cout << "The stream is: ";
 
     for(int i : stream){
+        cout << i;
+    }
+
+    cout << endl << "Longest palindrome is: ";
+
+    for(int i : palindrome){
         cout << i;
     }
 }
