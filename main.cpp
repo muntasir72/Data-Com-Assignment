@@ -315,7 +315,7 @@ void lineEncodingSchemes(vector<int> &stream){
 
     for(int i : encoded_stream){
         cout << i << " ";
-    }
+    };
 }
 
 void digital_input(){
