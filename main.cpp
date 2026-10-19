@@ -143,22 +143,6 @@ vector<int> Differential_Manchester(vector<int> stream){
     return Manchester(encoded_stream);
 }
 
-vector<int> AMI(vector<int> stream){
-    int level = -1;
-    vector<int> encoded_stream;
-
-    for(int i : stream){
-        if(i == 1){
-            level = level*(-1);
-            encoded_stream.push_back(level);
-        }
-        else{
-            encoded_stream.push_back(0);
-        }
-    }
-
-    return encoded_stream;
-}
 
 vector<int> B8ZS(vector<int> stream){
 
@@ -235,7 +219,6 @@ void lineEncodingSchemes(vector<int> &stream){
         case(4):encoded_stream = Differential_Manchester(stream);
         break;
         case(5):encoded_stream = scrambling(stream);
-        encoded_stream = AMI(encoded_stream);
         break;
         default:
         cout << "Please enter a valid encoding scheme";
