@@ -129,6 +129,41 @@ vector<int> Manchester(vector<int> stream){
     return encoded_stream;
 }
 
+vector<int> Differential_Manchester(vector<int> stream){
+    int level = 1;
+
+    vector<int> encoded_stream;
+
+    for(int i : stream){
+        if(i == 1) level = (level+1)%2;
+        else level = level;
+        encoded_stream.push_back(level);
+    }
+
+    return Manchester(encoded_stream);
+}
+
+vector<int> AMI(vector<int> stream){
+    int level = -1;
+    vector<int> encoded_stream;
+
+    for(int i : stream){
+        if(i == 1){
+            level = level*(-1);
+            encoded_stream.push_back(level);
+        }
+        else{
+            encoded_stream.push_back(0);
+        }
+    }
+
+    return encoded_stream;
+}
+
+void scrambling(vector<int> &stream){
+    
+}
+
 void lineEncodingSchemes(vector<int> &stream){
     cout << "1. NRZ-L" << endl << 
             "2. NRZ-I" << endl <<
@@ -151,9 +186,10 @@ void lineEncodingSchemes(vector<int> &stream){
         break;
         case(3):encoded_stream = Manchester(stream);
         break;
-        case(4):;
+        case(4):encoded_stream = Differential_Manchester(stream);
         break;
-        case(5):;
+        case(5):encoded_stream = AMI(stream);
+        scrambling(encoded_stream);
         break;
         default:
         cout << "Please enter a valid encoding scheme";
