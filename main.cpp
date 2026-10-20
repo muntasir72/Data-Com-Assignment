@@ -474,6 +474,156 @@ vector<float> sampling(vector<float> signal){
     return sampled_signal;
 }
 
+vector<float> quantization(vector<float> sampled_signal){
+    vector<float> quantized_signal;
+    int levels = 8;
+
+    for(int i = 0; i < sampled_signal.size(); i++){
+        int level = (sampled_signal[i] + 1) * levels / 2;
+
+        if(level >= levels){
+            level = levels - 1;
+        }
+
+        float value = -1 + (level + 0.5) * 2.0 / levels;
+        quantized_signal.push_back(value);
+    }
+
+    return quantized_signal;
+}
+
+vector<int> pcmEncoding(vector<float> quantized_signal){
+    vector<int> encoded_signal;
+    int levels = 8;
+
+    for(int i = 0; i < quantized_signal.size(); i++){
+        int level = (quantized_signal[i] + 1) * levels / 2;
+
+        if(level >= levels){
+            level = levels - 1;
+        }
+
+        for(int bit = 2; bit >= 0; bit--){
+            encoded_signal.push_back((level >> bit) & 1);
+        }
+    }
+
+    return encoded_signal;
+}
+
+vector<float> pcmDecoding(vector<int> encoded_signal){
+    vector<float> decoded_signal;
+    int levels = 8;
+
+    for(int i = 0; i + 2 < encoded_signal.size(); i += 3){
+        int level = encoded_signal[i] * 4
+                  + encoded_signal[i + 1] * 2
+                  + encoded_signal[i + 2];
+
+        float value = -1 + (level + 0.5) * 2.0 / levels;
+        decoded_signal.push_back(value);
+    }
+
+    return decoded_signal;
+}
+
+void showAnalogWaveform(const vector<float>& signal){
+    if(signal.empty()) return;
+
+    const int W = 1000, H = 420;
+    const int left = 70, right = 30;
+    const int top = 70, bottom = 290;
+    const int axisY = 320;
+
+    InitWindow(W, H, "PCM Decoded Signal");
+    SetTargetFPS(60);
+
+    float dx = float(W - left - right) / signal.size();
+
+    auto y = [&](float v){
+        return top + (1 - v) * (bottom - top) / 2;
+    };
+
+    while(!WindowShouldClose()){
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawText("PCM Decoded Signal", 20, 20, 25, DARKGRAY);
+
+        for(int v : {1, 0, -1}){
+            DrawLine(left, y(v), W - right, y(v), LIGHTGRAY);
+        }
+
+        DrawText("+1", 25, y(1) - 8, 16, DARKGRAY);
+        DrawText("0", 35, y(0) - 8, 16, DARKGRAY);
+        DrawText("-1", 25, y(-1) - 8, 16, DARKGRAY);
+
+        for(int i = 0; i < signal.size(); i++){
+            int x1 = left + int(i * dx);
+            int x2 = left + int((i + 1) * dx);
+
+            DrawLine(x1, y(signal[i]), x2, y(signal[i]), BLUE);
+
+            if(i + 1 < signal.size()){
+                DrawLine(
+                    x2, y(signal[i]),
+                    x2, y(signal[i + 1]),
+                    BLUE
+                );
+            }
+        }
+
+        DrawLine(left, axisY, W - right, axisY, BLACK);
+        DrawText("Time", W / 2 - 25, 375, 18, DARKGRAY);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+}
+
+void analog_input(){
+    vector<float> signal = generateAnalogSignal();
+
+    vector<float> sampled_signal = sampling(signal);
+
+    vector<float> quantized_signal = quantization(sampled_signal);
+
+    vector<int> encoded_signal = pcmEncoding(quantized_signal);
+
+    vector<float> decoded_signal = pcmDecoding(encoded_signal);
+
+    cout << "Original sampled signal: ";
+    for(float value : sampled_signal){
+        cout << value << " ";
+    }
+
+    cout << endl << endl;
+
+    cout << "Quantized signal: ";
+    for(float value : quantized_signal){
+        cout << value << " ";
+    }
+
+    cout << endl << endl;
+
+    cout << "PCM Encoded bitstream: ";
+    for(int bit : encoded_signal){
+        cout << bit;
+    }
+
+    cout << endl << endl;
+
+    cout << "Decoded signal: ";
+    for(float value : decoded_signal){
+        cout << value << " ";
+    }
+
+    cout << endl << endl;
+
+    showAnalogWaveform(decoded_signal);
+}
+
 int main(){
     cout << "==================================" << endl << 
             " DIGITAL SIGNAL ENCODER & DECODER " << endl << 
@@ -494,7 +644,7 @@ int main(){
     switch(option){
         case(1): digital_input();
         break;
-        case(2): cout << "2";
+        case(2): analog_input();
         break;
         case(3): cout << "3";
         break;
