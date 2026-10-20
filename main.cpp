@@ -17,7 +17,7 @@ void generateRandomBits(vector<int> &stream, int size){
         stream.push_back(num);
     }
 }
-
+// Function to generate a stream of bits with a fixed sequence of four consecutive 0s
 void generateBitsWithZeroRuns(vector<int> &stream, int size){
     vector<int> zeroes = {0,0,0,0};
     for(int i = 0; i < size - 4; i++){
@@ -27,6 +27,7 @@ void generateBitsWithZeroRuns(vector<int> &stream, int size){
     stream.insert(stream.begin() + rand()%(size - 3), zeroes.begin(), zeroes.end());
 }
 
+// Function to insert bits manually into the stream
 void insertBits(vector<int> &stream, int size){
     insert_bits:
     
@@ -44,6 +45,7 @@ void insertBits(vector<int> &stream, int size){
     }
 }
 
+// Function to find the longest palindromic subsequence in the input stream
 vector<int> longestPalindrome(const vector<int>& stream) {
     int n = stream.size();
     vector<int> radius(2 * n);
@@ -122,6 +124,7 @@ vector<int> NRZ_L(vector<int> stream){
     return encoded_stream;
 }
 
+// NRZ-I encoding: Invert the signal level on a '1', keep it the same on a '0'.
 vector<int> NRZ_I(vector<int> stream){
     int level = 1;
     vector<int> encoded_stream;
