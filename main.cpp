@@ -2,6 +2,7 @@
 #include "raylib.h"
 using namespace std;
 
+// Function to check if the input stream is valid (only contains 0s and 1s)
 bool validCheck(vector<int> stream){
     for(int i : stream){
         if(i != 0 && i != 1) return false;
@@ -9,6 +10,7 @@ bool validCheck(vector<int> stream){
     return true;
 }
 
+// Function to generate a random stream of bits (0s and 1s)
 void generateRandomBits(vector<int> &stream, int size){
     for(int i = 0; i < size; i++){
         int num = rand()%2;
