@@ -449,6 +449,31 @@ void digital_input(){
     lineEncodingSchemes(stream);
 }
 
+vector<float> generateAnalogSignal(){
+    vector<float> signal;
+    int size = 100;
+
+    for(int i = 0; i < size; i++){
+        float t = (float)i / size;
+        float value = sin(2 * PI * t);
+        signal.push_back(value);
+    }
+
+    return signal;
+}
+
+vector<float> sampling(vector<float> signal){
+    vector<float> sampled_signal;
+    int sample_count = 20;
+    int interval = signal.size() / sample_count;
+
+    for(int i = 0; i < signal.size(); i += interval){
+        sampled_signal.push_back(signal[i]);
+    }
+
+    return sampled_signal;
+}
+
 int main(){
     cout << "==================================" << endl << 
             " DIGITAL SIGNAL ENCODER & DECODER " << endl << 
