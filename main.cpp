@@ -186,7 +186,7 @@ vector<int> B8ZS(vector<int> stream){
            vector<int>(stream.begin() + i, stream.begin() + i + 8) == vector<int>(8, 0)){
 
             encoded_stream.insert(encoded_stream.end(),
-                {0,0,0,level,-level,0,-level,level});
+                {0,0,0,level,-level,0,level,-level});
 
             i += 7;
             continue;
