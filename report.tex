@@ -1,0 +1,60 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{\vspace{-1.5em}Digital Signal Encoder and Decoder}
+\author{ITT 036 -- Programming Assignment 1}
+\date{Autumn 2026}
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+
+\section*{Overview}
+This project is a C++ program that shows how digital signals are encoded
+and how an analog signal is converted into digital form. The user can
+either generate digital data or start from an analog signal, and the
+program then draws the resulting waveforms on screen using Raylib.
+
+\section*{Implementation}
+On the digital side, the program can produce random binary data, data
+with long runs of consecutive zeros, or data typed in by the user. It
+also searches the generated sequence for its longest palindromic
+substring. Five line coding schemes are implemented: NRZ-L, NRZ-I,
+Manchester, Differential Manchester, and AMI. For AMI, the B8ZS and
+HDB3 scrambling techniques are also available.
+
+On the analog side, the program generates a sine wave and samples it.
+Each sample is then quantized to one of eight levels. During PCM
+encoding, every sample is turned into a 3-bit code, and the decoder
+reverses this by rebuilding the quantized values from those codes.
+Raylib is used throughout to plot both the digital signals and the
+decoded output.
+
+\section*{Tools and Assumptions}
+The project is written in C++ and relies only on the C++ Standard
+Library and Raylib. The analog signal is kept roughly between $-1$ and
+$+1$. In its current form, the PCM stage takes 20 samples and uses
+eight quantization levels, which gives a 60-bit encoded stream. Since
+the decoder outputs the midpoint of each quantization level, the decoded
+values will not always match the original samples exactly.
+
+\section*{How to Run}
+On Windows, you can run \texttt{assignment.exe} directly from the project
+repository. Otherwise, \texttt{main.cpp} can be compiled with any C++
+compiler that has been set up with Raylib. When the program starts, a
+menu lets you choose digital input, analog input, or exit.
+
+\section*{References and Acknowledgment}
+\begin{enumerate}[leftmargin=*,nosep]
+    \item ITT 036, Programming Assignment 1, Autumn 2026.
+    \item Project source:
+    \url{https://github.com/muntasir72/Data-Com-Assignment}
+    \item Raylib documentation: \url{https://www.raylib.com/}
+\end{enumerate}
+
+I used AI assistance to help understand parts of the code and to
+prepare this report.
+
+\end{document}
